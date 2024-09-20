@@ -1,0 +1,30 @@
+
+<div class="row">
+    <div class="col"></div>
+    <div class="col-lg-3 col-sm-5 container mat-elevation-z5 p-5 mt-5">
+    <h5 class="text-center fw-bold">Login</h5>
+    <form [formGroup]="LoginForm" (ngSubmit)="submit()">
+    <mat-form-field>
+        <input type="text" matInput placeholder="Email address" formControlName="email" />
+        <mat-error *ngIf="email?.errors?.['required']">
+            Email is required
+        </mat-error>
+        <mat-error *ngIf="email?.errors?.['email']">
+            Email is invalid
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <input type="password" matInput placeholder="Password" formControlName="password" >
+        <mat-error *ngIf="password?.errors?.['required']">
+            Password is required
+        </mat-error>
+    </mat-form-field>
+    <div class="text-center">
+    <button mat-raised-button class="btn btn-primary" >Login</button>
+    </div>
+    <p class="text-center">New to our platform <a routerLink="/signup">sign up!</a> </p>
+</form>
+
+</div>
+<div class="col"></div>
+</div>

@@ -1,0 +1,72 @@
+<div class="container-fluid">
+    <div class="row">
+<div class="chat-list mat-elevation-z5 col-12 col-lg-5 mx-auto">
+    <mat-form-field appearance="outline" class="w-100 mx-auto">
+        <input matInput type="text" [matAutocomplete]="users" placeholder="Search for users..." [formControl]="searchControl" class="w-100">
+    </mat-form-field>
+    <mat-autocomplete #users="matAutocomplete">
+        <mat-option *ngFor="let user of users$ | async" (click)="createChat(user)">
+            {{user.displayName}}
+        </mat-option>
+    </mat-autocomplete>
+ 
+    <mat-selection-list [multiple]="false" [formControl]="chatListControl">
+        <mat-divider></mat-divider>
+        <mat-list-option *ngFor="let chat of myChats$ | async " [value]="chat.id" class="p-3 h-100">
+            <img matListItemAvatar [src]="chat.chatPic ?? '../../../assets/profile.png'" alt="">
+            <p mat-line class="text-dark d-flex justify-content-between " >
+                <span class="fw-bold  ">
+                    {{chat.chatName}}
+                </span>
+                <span class=" chat-date fw-light">
+                    {{chat.lastMessageDate | dateDisplay}}
+                </span>
+            </p>
+            <p mat-line class="text-dark flex-row ">
+                {{chat.lastMessage}}
+            </p>
+        </mat-list-option>
+    </mat-selection-list>
+
+</div>
+
+<div class="message mat-elevation-z5 col-12 col-lg-7 mx-auto ">
+    <div *ngIf="selectedChat$ | async as selectedChat; else noMessages" class=" message-header mt-1 d-flex p-3">
+        <img  [src]="selectedChat.chatPic ?? '../../../assets/profile.png'" alt="" height="40" width="40">&nbsp;
+        <h2>{{selectedChat.chatName}}</h2>
+    </div>
+    <ng-template #noMessages>
+         <div  class=" message-header mt-1 d-flex p-3">
+            <h4>Messages</h4>
+         </div>
+        </ng-template>
+        <mat-divider></mat-divider>
+        <div class="chat-area d-flex flex-column">
+            <ng-container *ngIf="user$ | async as currentUser">
+                <div *ngFor=" let message of message$ | async" 
+                class="bubble-container m-3 child  card shadow p-3 "
+                [ngClass]="{'sender':message.senderId === currentUser.uid}">
+                    <div class="message-bubble ">
+                        {{message.text}}
+                        <span class="date-bubble ps-5 mt-0 fw-light   ">
+                          {{message.sentDate | dateDisplay}}
+                        </span>
+                    </div>
+                
+                </div>
+                <div  #endOfChat></div>
+            </ng-container>
+           
+        </div>
+    <div class="input-area">
+        <mat-form-field appearance="outline" class="w-100 ">
+            <input [formControl]="messageControl" matInput type="text" placeholder="Enter your messages.." (keydown.enter)="sendMessage()" class="w-100">
+            <button mat-icon-button matSuffix (click)="sendMessage()">
+                <mat-icon>send</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+</div>
+</div>
+</div>
+
